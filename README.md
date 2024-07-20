@@ -7,9 +7,12 @@ All tasks are done.
 
 ## Installation
 
-\*\*\* Need flutter and Dart versions to run properly.
-
-Environment - Flutter 3.22.2 | Dart 3.4.3 | Stable channel
+## Instructions:
+- Flutter 3.22.2 | Dart 3.4.3 | Stable channel
+- Clone the repository using git clone https://github.com/isuMadampitige/flutter-practical-test.git
+- Navigate to the project directory and run flutter pub get
+- Use flutter run to start the application
+- Notes: Please ensure that you have the latest version of Flutter installed.
 
 ## Features
 
