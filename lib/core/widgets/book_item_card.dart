@@ -22,21 +22,7 @@ class _BookItemCardState extends State<BookItemCard> {
   @override
   void didUpdateWidget(BookItemCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget != widget) {
-      // // Dispatching a remove event for each book in the old widget that is not in the new widget
-      oldWidget.books
-          .where((book) => !widget.books.contains(book))
-          .forEach((book) {
-        locator<FavoriteBloc>().add(RemoveBookFromFavorites(book));
-      });
-
-      // Dispatching an add event for each book in the new widget that is not in the old widget
-      widget.books
-          .where((book) => !oldWidget.books.contains(book))
-          .forEach((book) {
-        locator<FavoriteBloc>().add(AddBookToFavorites(book));
-      });
-    }
+    // No need for extra event dispatching here.
   }
 
   @override
@@ -44,18 +30,18 @@ class _BookItemCardState extends State<BookItemCard> {
     Size size = MediaQuery.of(context).size;
     return ListView.builder(
       shrinkWrap: true,
-      // itemExtent: MediaQuery.of(context).size.width * 0.5,
       itemCount: widget.books.length,
       scrollDirection: Axis.vertical,
       itemBuilder: (BuildContext context, int index) {
         return InkWell(
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BookDetails(
-                          bookModel: widget.books[index],
-                        )));
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    BookDetails(bookModel: widget.books[index]),
+              ),
+            );
           },
           child: Column(
             children: [
@@ -71,18 +57,13 @@ class _BookItemCardState extends State<BookItemCard> {
                     ),
                     Expanded(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Flexible(
-                                  child: Texts.bodyText(
-                                      widget.books[index].title)),
-                            ],
+                          Flexible(
+                            child: Texts.bodyText(widget.books[index].title),
                           ),
-                          Row(
-                            children: [
-                              Flexible(child: Texts.caption("Author")),
-                            ],
+                          Flexible(
+                            child: Texts.caption("Author"),
                           ),
                         ],
                       ),
@@ -93,49 +74,42 @@ class _BookItemCardState extends State<BookItemCard> {
                         ..add(CheckIfBookIsFavorite(widget.books[index])),
                       child: BlocBuilder<FavoriteBloc, FavoriteState>(
                         builder: (context, state1) {
-                          print(state1);
-                          FocusScope.of(context).unfocus();
-
                           if (state1 is BookIsFavorite) {
-                            print(state1.isFavorite);
-
                             return InkWell(
                               onTap: () {
-                                if (!state1.isFavorite) {
-                                  context.read<FavoriteBloc>().add(
-                                      AddBookToFavorites(widget.books[index]));
-                                } else {
-                                  context.read<FavoriteBloc>().add(
-                                      RemoveBookFromFavorites(
-                                          widget.books[index]));
-                                }
+                                context.read<FavoriteBloc>().add(
+                                      state1.isFavorite
+                                          ? RemoveBookFromFavorites(
+                                              widget.books[index])
+                                          : AddBookToFavorites(
+                                              widget.books[index]),
+                                    );
                               },
                               child: Image(
-                                image: state1.isFavorite == true
-                                    ? AssetImage('assets/images/heart.png')
-                                    : AssetImage(
-                                        'assets/images/heart-outline.png'),
+                                image: AssetImage(
+                                  state1.isFavorite
+                                      ? 'assets/images/heart.png'
+                                      : 'assets/images/heart-outline.png',
+                                ),
                               ),
                             );
                           } else if (state1 is FavoriteLoaded) {
-                            print("FavoriteLoaded-${state1.isFavorite}");
-
                             return InkWell(
                               onTap: () {
-                                if (state1.isFavorite == false) {
-                                  context.read<FavoriteBloc>().add(
-                                      AddBookToFavorites(widget.books[index]));
-                                } else {
-                                  context.read<FavoriteBloc>().add(
-                                      RemoveBookFromFavorites(
-                                          widget.books[index]));
-                                }
+                                context.read<FavoriteBloc>().add(
+                                      state1.isFavorite
+                                          ? RemoveBookFromFavorites(
+                                              widget.books[index])
+                                          : AddBookToFavorites(
+                                              widget.books[index]),
+                                    );
                               },
                               child: Image(
-                                image: state1.isFavorite == true
-                                    ? AssetImage('assets/images/heart.png')
-                                    : AssetImage(
-                                        'assets/images/heart-outline.png'),
+                                image: AssetImage(
+                                  state1.isFavorite
+                                      ? 'assets/images/heart.png'
+                                      : 'assets/images/heart-outline.png',
+                                ),
                               ),
                             );
                           }
@@ -146,7 +120,7 @@ class _BookItemCardState extends State<BookItemCard> {
                   ],
                 ),
               ),
-              const Divider()
+              const Divider(),
             ],
           ),
         );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_practical_test/features/favorites/presentation/pages/favorites_page.dart';
-import '../../features/book_details/presentaion/pages/Book_details_page.dart';
+import '../../features/book_details/presentaion/pages/book_details_page.dart';
 import '../transition/custome_fade_route.dart';
 
 class AppRoutes {

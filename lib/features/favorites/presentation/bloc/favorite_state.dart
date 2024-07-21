@@ -14,13 +14,16 @@ class FavoriteLoading extends FavoriteState {}
 
 class FavoriteLoaded extends FavoriteState {
   final List<BookModel> result;
-  final bool? isFavorite;
+  final bool isFavorite;
 
   FavoriteLoaded(this.result, this.isFavorite);
 
   @override
-  List<Object> get props => [result];
-  List<bool?> get props2 => [isFavorite];
+  List<Object> get props => [result, isFavorite];
+  // List<bool?> get props2 => [isFavorite];
+
+  @override
+  bool get stringify => true;
 }
 
 class FavoriteError extends FavoriteState {

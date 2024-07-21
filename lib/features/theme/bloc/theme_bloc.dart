@@ -13,8 +13,8 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ThemeBloc()
       : super(
             ThemeInitial(themeData: AppTheme.getThemeFromKey(ThemeKey.light))) {
-    _loadTheme();
     on<ToggleThemeEvent>(_mapEventToState);
+    _loadTheme();
   }
 
   void _mapEventToState(
@@ -24,9 +24,14 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
             AppTheme.getThemeFromKey(ThemeKey.light)) {
       emit(ThemeChanged(themeData: AppTheme.getThemeFromKey(ThemeKey.dark)));
       _saveThemePreference(true);
-    } else {
+    } else if (state is ThemeChanged &&
+        (state as ThemeChanged).themeData ==
+            AppTheme.getThemeFromKey(ThemeKey.dark)) {
       emit(ThemeChanged(themeData: AppTheme.getThemeFromKey(ThemeKey.light)));
       _saveThemePreference(false);
+    } else {
+      emit(ThemeChanged(themeData: AppTheme.getThemeFromKey(ThemeKey.dark)));
+      _saveThemePreference(true);
     }
   }
 
