@@ -95,7 +95,8 @@ class _HomePageState extends State<HomePage> {
                           child: BookItemCard(books: state.result),
                         );
                       } else if (state is BookEmpty) {
-                        return Expanded(child: Center(child: Text("No Data")));
+                        return const Expanded(
+                            child: Center(child: Text("No Data")));
                       } else {
                         return Container();
                       }
