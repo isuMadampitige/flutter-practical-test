@@ -36,7 +36,7 @@ class ApiService {
       {Map<String, dynamic>? headers, Map<String, dynamic>? data}) async {
     try {
       final response = await _dio.get(endpoint,
-          options: Options(headers: headers), queryParameters: data);
+          options: Options(headers: headers), data: data);
       return response;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -44,10 +44,11 @@ class ApiService {
   }
 
   Future<Response> postRequest(String endpoint,
-      {Map<String, dynamic>? headers, Map<String, dynamic>? data}) async {
+      {Map<String, dynamic>? headers,
+      Map<String, dynamic>? quearyParams}) async {
     try {
       final response = await _dio.post(endpoint,
-          options: Options(headers: headers), data: data);
+          options: Options(headers: headers), queryParameters: quearyParams);
       return response;
     } on DioException catch (e) {
       throw _handleError(e);

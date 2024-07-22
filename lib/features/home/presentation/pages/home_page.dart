@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_practical_test/core/constants/constants.dart';
@@ -17,9 +19,45 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  String _currentQuery = "";
+
+  void onScroll() {
+    print('at bottom');
+    if (_scrollController.position.atEdge) {
+      context.read<BookBloc>().add(NextPage());
+    }
+  }
+
+  onSearchChanged(String value) {
+    final query = value;
+    print(query);
+
+    if (query != _currentQuery) {
+      _currentQuery = query;
+      context.read<BookBloc>().add(ResetItems());
+      context.read<BookBloc>().add(OnSearchQuery(_currentQuery, 1));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      onScroll();
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController textController = TextEditingController();
     Size size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
@@ -43,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                         height: 45,
                         child: CommonTextField(
                           labelText: 'Search',
-                          controller: textController,
+                          controller: _searchController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter some text';
@@ -51,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                             return null;
                           },
                           onchange: (value) {
-                            context.read<BookBloc>().add(OnSearchQuery(value!));
+                            onSearchChanged(value!);
                           },
                         ),
                       ),
@@ -71,14 +109,12 @@ class _HomePageState extends State<HomePage> {
                 ),
                 BlocProvider(
                   create: (context) =>
-                      locator<BookBloc>()..add(OnSearchQuery("")),
+                      locator<BookBloc>()..add(OnSearchQuery(_currentQuery, 1)),
                   child: BlocConsumer<BookBloc, BookState>(
                     listener: (context, state) {
                       FocusScope.of(context).unfocus();
-
-                      if (state is BookInitial) {
-                        showLoadingDialog(context);
-                      } else if (state is BookLoading) {
+                      print(state);
+                      if (state is BookLoading) {
                         showLoadingDialog(context);
                       } else if (state is BookError) {
                         hideLoadingDialog(context);
@@ -92,7 +128,20 @@ class _HomePageState extends State<HomePage> {
                     builder: (context, state) {
                       if (state is BookLoaded) {
                         return Expanded(
-                          child: BookItemCard(books: state.result),
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            itemCount: state.result.length,
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index >= state.result.length) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              return BookItemCard(
+                                  bookModel: state.result[index]);
+                            },
+                          ),
                         );
                       } else if (state is BookEmpty) {
                         return const Expanded(

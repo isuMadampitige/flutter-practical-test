@@ -5,22 +5,22 @@ import '../../../../core/network/api_config.dart';
 import '../../../../core/network/api_services.dart';
 
 abstract class HomeRemoteDatasorce {
-  Future<List<BookModel>> searchBooks(String query);
+  Future<List<BookModel>> searchBooks(String query, int page, int limit);
 }
 
 class HomeRemoteDatasorceImpl extends HomeRemoteDatasorce {
   HomeRemoteDatasorceImpl();
 
   @override
-  Future<List<BookModel>> searchBooks(String query) async {
+  Future<List<BookModel>> searchBooks(String query, int page, int limit) async {
     try {
       String endpoint = "${APIConfig.searchBooks}$query";
       Response<dynamic> response = await ApiService().postRequest(
         endpoint,
-        // data: {
-        //   'page': 1,
-        //   'limit': 2,
-        // },
+        quearyParams: {
+          'page': page,
+          'limit': limit,
+        },
       );
 
       if (response.data != null && response.statusCode == 200) {

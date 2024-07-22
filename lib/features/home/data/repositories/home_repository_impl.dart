@@ -13,10 +13,12 @@ class HomeRepositoryImpl implements HomeRepository {
   HomeRepositoryImpl(this.homeRemoteDatasorce);
 
   @override
-  Future<Either<Failure, List<BookModel>>> searchBooks(String query) async {
+  Future<Either<Failure, List<BookModel>>> searchBooks(
+      String query, int page, int limit) async {
     try {
-      final apiResponse = await homeRemoteDatasorce.searchBooks(query);
-      print("apiResponse---$apiResponse");
+      final apiResponse =
+          await homeRemoteDatasorce.searchBooks(query, page, limit);
+      print("apiResponse---${apiResponse.length}");
       return Right(apiResponse);
     } on ServerException {
       return const Left(ServerFailure('An error has occurred'));

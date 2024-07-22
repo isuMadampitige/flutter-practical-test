@@ -14,11 +14,22 @@ class BookLoading extends BookState {}
 
 class BookLoaded extends BookState {
   final List<BookModel> result;
+  final bool hasReachedMax;
 
-  BookLoaded(this.result);
+  BookLoaded({required this.result, this.hasReachedMax = false});
+
+  BookLoaded copyWith({
+    List<BookModel>? result,
+    bool? hasReachedMax,
+  }) {
+    return BookLoaded(
+      result: result ?? this.result,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+    );
+  }
 
   @override
-  List<Object> get props => [result];
+  List<Object> get props => [result, hasReachedMax];
 }
 
 class BookError extends BookState {

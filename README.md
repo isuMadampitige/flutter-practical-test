@@ -8,6 +8,7 @@ All tasks are done.
 ## Installation
 
 ## Instructions:
+
 - Flutter 3.22.2 | Dart 3.4.3 | Stable channel
 - Clone the repository using git clone https://github.com/isuMadampitige/flutter-practical-test.git
 - Navigate to the project directory and run flutter pub get
@@ -24,3 +25,4 @@ All tasks are done.
 - Favorites- add/remove
 - Transitions
 - Handle errors/Exceptions
+- Pagination

@@ -52,8 +52,16 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 );
               } else if (state is FavoriteLoaded) {
                 return SizedBox(
-                    height: MediaQuery.of(context).size.height - 60,
-                    child: BookItemCard(books: state.result));
+                  height: MediaQuery.of(context).size.height - 60,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.result.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (BuildContext context, int index) {
+                      return BookItemCard(bookModel: state.result[index]);
+                    },
+                  ),
+                );
               } else {
                 return const Center(
                   child: Text("No Favorites Found."),

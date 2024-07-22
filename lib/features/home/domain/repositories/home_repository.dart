@@ -4,5 +4,6 @@ import 'package:flutter_practical_test/features/book/data/models/book_model.dart
 import '../../../../core/error/failure.dart';
 
 abstract class HomeRepository {
-  Future<Either<Failure, List<BookModel>>> searchBooks(String query);
+  Future<Either<Failure, List<BookModel>>> searchBooks(
+      String query, int page, int limit);
 }

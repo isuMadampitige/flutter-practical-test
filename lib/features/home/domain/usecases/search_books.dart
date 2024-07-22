@@ -9,7 +9,8 @@ class SearchBooks {
 
   SearchBooks(this.repository);
 
-  Future<Either<Failure, List<BookModel>>> searchBooks(String query) async {
-    return await repository.searchBooks(query);
+  Future<Either<Failure, List<BookModel>>> searchBooks(
+      String query, int page, int limit) async {
+    return await repository.searchBooks(query, page, limit);
   }
 }

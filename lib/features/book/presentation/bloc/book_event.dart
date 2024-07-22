@@ -7,5 +7,14 @@ abstract class BookEvent extends Equatable {
 
 class OnSearchQuery extends BookEvent {
   final String searchQuery;
-  OnSearchQuery(this.searchQuery);
+  final int page;
+
+  OnSearchQuery(this.searchQuery, this.page);
+
+  @override
+  List<Object> get props => [searchQuery, page];
 }
+
+class ResetItems extends BookEvent {}
+
+class NextPage extends BookEvent {}
